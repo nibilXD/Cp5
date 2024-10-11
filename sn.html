@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashwith AI - English to Sanskrit Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      width: 320px;
+      height: 500px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .chat-box {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-container {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      background-color: #f1f1f1;
+      border-top: 1px solid #ccc;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .user-message, .bot-message {
+      margin-bottom: 10px;
+      display: flex;
+    }
+
+    .user-message p {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border-radius: 20px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .bot-message p {
+      background-color: #e9ecef;
+      color: #495057;
+      padding: 10px;
+      border-radius: 20px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h1>Ashwith AI</h1>
+    <div id="chat-box" class="chat-box">
+      <div class="bot-message">
+        <p>Hello! I'm Ashwith AI, developed by Nibil. Type anything in English, and I will translate it to Sanskrit.</p>
+      </div>
+    </div>
+    <div class="input-container">
+      <input type="text" id="user-input" placeholder="Type your message in English" />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Debugging button click and input interaction
+    document.getElementById("send-btn").addEventListener("click", function () {
+      console.log('Send button clicked');
+      sendMessage();
+    });
+
+    document.getElementById("user-input").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        console.log('Enter key pressed');
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      let userInput = document.getElementById("user-input").value.trim();
+      if (userInput !== "") {
+        console.log("User input: " + userInput);
+        displayMessage(userInput, "user");
+        document.getElementById("user-input").value = ""; // Clear input field
+
+        setTimeout(() => {
+          let botResponse = translateToSanskrit(userInput);
+          typingAnimation(botResponse);
+        }, 1000);
+      } else {
+        console.log("Empty input, nothing to send");
+      }
+    }
+
+    function displayMessage(message, sender) {
+      let chatBox = document.getElementById("chat-box");
+      let messageElement = document.createElement("div");
+      messageElement.classList.add(sender + "-message");
+
+      let paragraph = document.createElement("p");
+      paragraph.textContent = message;
+
+      messageElement.appendChild(paragraph);
+      chatBox.appendChild(messageElement);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function typingAnimation(text) {
+      let chatBox = document.getElementById("chat-box");
+      let messageElement = document.createElement("div");
+      messageElement.classList.add("bot-message");
+
+      let paragraph = document.createElement("p");
+      paragraph.textContent = ""; 
+
+      messageElement.appendChild(paragraph);
+      chatBox.appendChild(messageElement);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      let index = 0;
+      let typingInterval = setInterval(function () {
+        paragraph.textContent += text.charAt(index);
+        index++;
+        if (index === text.length) {
+          clearInterval(typingInterval);
+        }
+      }, 100);
+    }
+
+    function translateToSanskrit(englishText) {
+      const translations = {
+        "hello": "नमस्ते",
+        "how are you": "कथमस्ति त्वं?",
+        "thank you": "धन्यवादः",
+        "good morning": "सुप्रभातम्",
+        "good night": "शुभरात्रिः",
+        "yes": "आम्",
+        "no": "नहि",
+        "please": "कृपया",
+        "sorry": "क्षमया",
+        "goodbye": "वदन्तु",
+        "what is your name": "तव नाम किम्?",
+        "my name is ashwith": "मम नाम अश्विथ अस्ति",
+        "how old are you": "कति वर्षाणि तव?",
+        "i am 16 years old": "अहं षोडशवर्षीयं",
+        "where are you from": "कुतः आगच्छसि?",
+        "i am from india": "अहं भारतात् आगच्छामि",
+        "what is the capital of india": "भारतस्य राजधानी किम्?",
+        "new delhi": "नवदिल्ली",
+        "i love you": "अहं त्वां प्रेमामि",
+        "what is the time": "समयः कः अस्ति?",
+        "how are you feeling": "तुम् कथम् अनुभवसि?",
+        "do you speak sanskrit": "भवान् संस्कृतं भाषते?",
+        "i am learning sanskrit": "अहं संस्कृतं पठामि",
+        "what is your profession": "तव व्यवसायः कः?",
+        "i am a student": "अहं छात्रः अस्मि",
+        "what do you like": "तुभ्यं किम् रोचते?",
+        "i like music": "मम संगीतं रोचते",
+        "do you have siblings": "किम् ते सहोदरः अस्ति?",
+        "i have one brother": "मम एकः भ्राता अस्ति",
+        "where is your home": "भवतः गृहम् कुत्र अस्ति?",
+        "my home is in thrissur": "मम गृहम् त्रिश्शूर् नगरे अस्ति"
+      };
+
+      return translations[englishText.toLowerCase()] || "Translation not found.";
+    }
+  </script>
+</body>
+</html>
